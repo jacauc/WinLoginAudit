@@ -1,4 +1,5 @@
-# Jacques Aucamp - 30 October 2017
+# @jacauc - 30 October 2017
+# IMPORTANT! Please add your own Telegram Bot chat ID to the end of this script!
 # Query the server for the login events. Attached this powershell script to Windows Scheduler on events 4625, and custom XML event for 4624
 
 <#
