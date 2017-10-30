@@ -1,6 +1,6 @@
 # Receive instant SUCCESSFUL or FAILED windows login attempt notifications on your Telegram chat app (Android/IOS/Windows/MAC)  
 
-This is a windows scheduled task to run a powershell script whenever a successful (Event ID 4624) or failed (Event ID 4625) event is detected in the windows event log.
+This is a windows scheduled task to run a powershell script whenever a successful (Event ID 4624) or failed (Event ID 4625) login event is detected in the windows event log.
 
 The powershell script will execute and parse the event log to find the event that triggered the scheduled task.
 The valuable information is then sent to a Telegram Chat Bot (Please add your own directly into the code)
