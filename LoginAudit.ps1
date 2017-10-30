@@ -2,35 +2,7 @@
 # IMPORTANT! Please add your own Telegram Bot chat ID to the end of this script!
 # Query the server for the login events. Attached this powershell script to Windows Scheduler on events 4625, and custom XML event for 4624
 
-<#
-Create a custom event filter for 4624 events to prevent login notification for the scheduled task itself as it authenticates
-#############
-<QueryList>
- <Query Id="0" Path="Security">
- <Select Path="Security">
-  *[System[EventID=4624]
-    and
-    EventData[Data[@Name='LogonType'] and (Data='2' or Data='10')]
-    and
-    EventData[Data[@Name='TargetUserName']!='system']
-    and
-    EventData[Data[@Name='TargetUserName']!='ANONYMOUS LOGON']
-    and
-    EventData[Data[@Name='TargetUserName']!='DWM-1']
-    and
-    EventData[Data[@Name='TargetUserName']!='DWM-2']
-    and
-    EventData[Data[@Name='TargetUserName']!='DWM-3']
-    and
-    EventData[Data[@Name='TargetUserName']!='LOCAL SERVICE']
-    and
-    EventData[Data[@Name='TargetUserName']!='NETWORK SERVICE']
-  ]
-  </Select>
- </Query>
-</QueryList>
-#############
-#>
+# Create a custom event filter for 4624 events to prevent login notification for the scheduled task itself as it authenticates. See the github repo for the XML code
 $colEvents = Get-EventLog -Newest 20 -LogName Security -InstanceId 4624,4625 | Where-Object { $_.TimeGenerated -ge (Get-Date).AddMinutes(-1)}
  
  
