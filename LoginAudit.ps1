@@ -66,6 +66,9 @@ Foreach ($Entry in $colEvents)
   } 
 }
 
+#if no results were returned, exit immediately and do not send Telegram message
+if ($result.count -eq 0) { exit }
+
  $result = $result |Sort-Object -Unique
  #$result
 #$FailedLogin= $eventsDC."UserName"
