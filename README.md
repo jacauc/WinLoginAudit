@@ -9,6 +9,8 @@ You will be able to get instant Telegram messages whenever someone successfully 
 
 To install, import the XML scheduled task and allow it to run as an administrative user. Point the powershell argument to the location of where you saved the .ps1 script file.
 
+Edit the .ps1 script directly, and add your telegram bot token and ID in the script.
+
 Pull requests or improvement suggestions welcome as this is Beta code.
 
 More details on creating your own Telegram bot can be found at https://api.telegram.org
