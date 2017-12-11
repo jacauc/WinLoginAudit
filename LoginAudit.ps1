@@ -1,5 +1,10 @@
-# @jacauc - 30 October 2017
-# IMPORTANT! Please add your own Telegram Bot chat ID to the end of this script!
+# @jacauc - 11 December 2017
+# IMPORTANT! Please add your own Telegram Bot chat ID to the end of this script, and remove the ---- characters before and after the placeholders!
+# The URL should look similar to this after editing:
+
+# curl "https://api.telegram.org/987654321/sendMessage?chat_id=123456789&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
+ 
+
 # Query the server for the login events. Attached this powershell script to Windows Scheduler on events 4625, and custom XML event for 4624
 
 # Create a custom event filter for 4624 events to prevent login notification for the scheduled task itself as it authenticates. See the github repo for the XML code
