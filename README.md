@@ -19,3 +19,4 @@ More details on creating your own Telegram bot can be found at https://api.teleg
 
 Run secpol.msc on the machine and navigate to Security Settings > Local Policies > Audit Policy and change the "Audit account logon events" and "Audit logon events" policies to audit SUCCESS and FAILURE events
 
+![2018-01-06_15-17-58](https://user-images.githubusercontent.com/18201320/34640213-21fb131a-f2f7-11e7-81a3-8254ade34998.png)
