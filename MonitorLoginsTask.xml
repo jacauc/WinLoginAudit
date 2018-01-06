@@ -63,7 +63,7 @@
   <Actions Context="Author">
     <Exec>
       <Command>powershell</Command>
-      <Arguments>c:\users\administrator\auditlogin.ps1</Arguments>
+      <Arguments>c:\users\administrator\LoginAudit.ps1</Arguments>
     </Exec>
   </Actions>
 </Task>
