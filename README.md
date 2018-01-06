@@ -13,7 +13,7 @@ Edit the .ps1 script directly, and add your telegram bot token and ID in the scr
 
 Pull requests or improvement suggestions welcome as this is Beta code.
 
-#Create a bot
+# Create a bot
 
 Simple instructions for setting up the Telegram Bot https://www.forsomedefinition.com/automation/creating-telegram-bot-notifications/:
 
@@ -30,7 +30,7 @@ RECORD THE TOKEN SHOWN IN THE MESSAGE
 
 
 
-#Edit Security Policy
+# Edit Security Policy
 Run secpol.msc on the machine and navigate to Security Settings > Local Policies > Audit Policy and change the "Audit account logon events" and "Audit logon events" policies to audit SUCCESS and FAILURE events
 
 ![2018-01-06_15-17-58](https://user-images.githubusercontent.com/18201320/34640213-21fb131a-f2f7-11e7-81a3-8254ade34998.png)
