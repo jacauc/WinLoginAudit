@@ -7,16 +7,27 @@ The valuable information is then sent to a Telegram Chat Bot (Please add your ow
 
 You will be able to get instant Telegram messages whenever someone successfully or unsuccessfully tries to login to your Windows Computer. This allows you to improve your security posture and become aware of malicious attempts to access your resources, whether manually attempted, or done by a bot with a passwordlist to attempt brute force logins to your Windows Machine.
 
-To install, import the XML scheduled task and allow it to run as an administrative user. Point the powershell argument to the location of where you saved the .ps1 script file.
+To install, import the XML scheduled task and allow it to run as an administrative user. Point the powershell argument to the location of where you saved the edited .ps1 script file.
 
 Edit the .ps1 script directly, and add your telegram bot token and ID in the script.
 
 Pull requests or improvement suggestions welcome as this is Beta code.
 
-More details on creating your own Telegram bot can be found at https://api.telegram.org
+#Create a bot
+Simple instructions for setting up the Telegram Bot https://www.forsomedefinition.com/automation/creating-telegram-bot-notifications/:
+Steps below slightly modified:
+0. Use telegram
+Chat with @botfather
+Type /newbot
+Give your bot a name... e.g. mywinloginaudit
+Give your bot a username... e.g. mywinloginauditbot
+You will get a message like this:
+![2018-01-06_15-53-12](https://user-images.githubusercontent.com/18201320/34640372-fd5d8314-f2f9-11e7-9b86-c9a30ee889b2.png)
+RECORD THE TOKEN SHOWN IN THE MESSAGE
 
 
 
+#Edit Security Policy
 Run secpol.msc on the machine and navigate to Security Settings > Local Policies > Audit Policy and change the "Audit account logon events" and "Audit logon events" policies to audit SUCCESS and FAILURE events
 
 ![2018-01-06_15-17-58](https://user-images.githubusercontent.com/18201320/34640213-21fb131a-f2f7-11e7-81a3-8254ade34998.png)
