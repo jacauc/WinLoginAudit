@@ -14,3 +14,8 @@ Edit the .ps1 script directly, and add your telegram bot token and ID in the scr
 Pull requests or improvement suggestions welcome as this is Beta code.
 
 More details on creating your own Telegram bot can be found at https://api.telegram.org
+
+
+
+Run secpol.msc on the machine and navigate to Security Settings > Local Policies > Audit Policy and change the "Audit account logon events" and "Audit logon events" policies to audit SUCCESS and FAILURE events
+
