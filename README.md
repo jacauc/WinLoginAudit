@@ -14,15 +14,18 @@ Edit the .ps1 script directly, and add your telegram bot token and ID in the scr
 Pull requests or improvement suggestions welcome as this is Beta code.
 
 #Create a bot
+
 Simple instructions for setting up the Telegram Bot https://www.forsomedefinition.com/automation/creating-telegram-bot-notifications/:
-Steps below slightly modified:
+
+Simplified instructions:
 0. Use telegram
-Chat with @botfather
-Type /newbot
+1. Chat with @botfather
+2. Type /newbot
 Give your bot a name... e.g. mywinloginaudit
 Give your bot a username... e.g. mywinloginauditbot
 You will get a message like this:
 ![2018-01-06_15-53-12](https://user-images.githubusercontent.com/18201320/34640372-fd5d8314-f2f9-11e7-9b86-c9a30ee889b2.png)
+
 RECORD THE TOKEN SHOWN IN THE MESSAGE
 
 
