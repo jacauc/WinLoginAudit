@@ -21,12 +21,25 @@ Simplified instructions:
 0. Use telegram
 1. Chat with @botfather
 2. Type /newbot
-Give your bot a name... e.g. mywinloginaudit
-Give your bot a username... e.g. mywinloginauditbot
-You will get a message like this:
+3. Give your bot a name... e.g. mywinloginaudit
+4. Give your bot a username... e.g. mywinloginauditbot
+5. You will get a message like this:
+
 ![2018-01-06_15-53-12](https://user-images.githubusercontent.com/18201320/34640372-fd5d8314-f2f9-11e7-9b86-c9a30ee889b2.png)
 
-RECORD THE TOKEN SHOWN IN THE MESSAGE
+6. RECORD THE TOKEN SHOWN IN THE MESSAGE
+7. Start a chat with your bot and type /start
+8. Exit aforementioned chat and create a Telegram Group conversation. Call it something like "System Notifications"
+9. Invite your bot to the group.
+10. Access the following page (insert your bot's TOKEN and remove the <<< and >>> characters): https://api.telegram.org/bot<<<TOKEN>>>/getUpdates
+11. Look for the group's ID as shown in green below. The group ID will normally be preceded by a minus sign. Record this ID:
+
+![2018-01-06_16-06-23](https://user-images.githubusercontent.com/18201320/34640491-4faaa5f0-f2fc-11e7-853e-72cc5b1df323.png)
+
+12. Do a test
+https://api.telegram.org/bot$TOKEN/sendMessage?chat_id=-12345&text=Hello+World
+
+
 
 
 
