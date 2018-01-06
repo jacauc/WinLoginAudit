@@ -42,7 +42,7 @@ https://api.telegram.org/bot<<<TOKEN>>>/getUpdates
 
 12. Do a test - You should now get a hello world message in the telegram group from your bot. If this didn't work, check steps 1-11 again. 
   ```
-  https://api.telegram.org/bot<<<TOKEN>>>/sendMessage?chat_id=<<<GROUPID>>>&text=Hello+World
+  https://api.telegram.org/bot<<<TOKEN>>>/sendMessage?chat_id=<<<-GROUPID>>>&text=Hello+World
   ```
 13. Keep your GROUPID and TOKEN and replace the values accordingly in the .ps1 powershell script file.
 
