@@ -1,4 +1,5 @@
 # Receive instant SUCCESSFUL or FAILED windows login attempt notifications on your Telegram chat app (Android/IOS/Windows/MAC)  
+<span style="color:green;"> text goes here</span>
 
 This is a windows scheduled task to run a powershell script whenever a successful (Event ID 4624) or failed (Event ID 4625) login event is detected in the windows event log.
 
@@ -36,10 +37,10 @@ Simplified instructions:
 
 ![2018-01-06_16-06-23](https://user-images.githubusercontent.com/18201320/34640491-4faaa5f0-f2fc-11e7-853e-72cc5b1df323.png)
 
-12. Do a test
-https://api.telegram.org/bot$TOKEN/sendMessage?chat_id=-12345&text=Hello+World
-
-
+12. Do a test - You should now get a hello world message in the telegram group from your bot. If this didn't work, check steps 1-11 again. 
+  ```
+  https://api.telegram.org/bot<<<TOKEN>>>/sendMessage?chat_id=<<<GROUPID>>>&text=Hello+World
+  ```
 
 
 
