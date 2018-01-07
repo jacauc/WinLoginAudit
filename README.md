@@ -15,7 +15,7 @@ Pull requests or improvement suggestions welcome as this is Beta code.
 
 # Create a bot
 
-Instructions for setting up the Telegram Bot https://www.forsomedefinition.com/automation/creating-telegram-bot-notifications/:
+Detailed instructions for setting up the Telegram Bot: https://www.forsomedefinition.com/automation/creating-telegram-bot-notifications/
 
 Simplified instructions:
 
