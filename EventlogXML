@@ -1,9 +1,9 @@
 <QueryList>
- <Query Id="0" Path="Security">
- <Select Path="Security">
+  <Query Id="0" Path="Security">
+    <Select Path="Security">
   *[System[EventID=4624]
     and
-    EventData[Data[@Name='LogonType'] and (Data='2' or Data='10')]
+    EventData[Data[@Name='LogonType'] and (Data='2' or Data='3' or Data='6' or Data='7' or Data='8' or Data='9' or Data='10' or Data='11')]
     and
     EventData[Data[@Name='TargetUserName']!='system']
     and
@@ -20,5 +20,5 @@
     EventData[Data[@Name='TargetUserName']!='NETWORK SERVICE']
   ]
   </Select>
- </Query>
+  </Query>
 </QueryList>
