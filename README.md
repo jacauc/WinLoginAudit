@@ -76,6 +76,27 @@ Run secpol.msc on the machine and navigate to Security Settings > Local Policies
 6. On the "General" tab, click on "Change User or Group" and select a local administrative user.
 7. Click OK and type the correct password for aforementioned user.
 
+NOTE: The scheduled task is created to filter out 4624 events as follows, since a successful execution of the scheduled task itself, will generate an event in the log, thus, without the filter, the task will enter into and endless loop.
+```
+<QueryList>
+  <Query Id="0" Path="Security">
+    <Select Path="Security">
+  *[System[EventID=4624]
+    and
+    EventData[Data[@Name='LogonType'] and (Data='2' or Data='3' or Data='6' or Data='7' or Data='8' or Data='9' or Data='10' or Data='11')]
+    and
+    EventData[Data[@Name='TargetUserName']!='SYSTEM']
+    and
+    EventData[Data[@Name='TargetUserName']!='ANONYMOUS LOGON']
+    and
+    EventData[Data[@Name='TargetUserName']!='LOCAL SERVICE']
+    and
+    EventData[Data[@Name='TargetUserName']!='NETWORK SERVICE']
+  ]
+  </Select>
+  </Query>
+</QueryList>
+```
 
 # Test it out
 1. Open a command prompt window and type:
