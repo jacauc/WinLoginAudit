@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-16"?>
-<Task version="1.2" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
+<Task version="1.4" xmlns="http://schemas.microsoft.com/windows/2004/02/mit/task">
   <RegistrationInfo>
     <Date>2017-10-29T05:14:59.4392963</Date>
     <Author>jacauc</Author>
-    <URI>\Login event notifications</URI>
+    <URI>\Login Audit</URI>
   </RegistrationInfo>
   <Triggers>
     <EventTrigger>
@@ -15,17 +15,11 @@
       <Subscription>&lt;QueryList&gt;&lt;Query Id="0" Path="Security"&gt;&lt;Select Path="Security"&gt;
   *[System[EventID=4624]
     and
-    EventData[Data[@Name='LogonType'] and (Data='2' or Data='10')]
+    EventData[Data[@Name='LogonType'] and (Data='2' or Data='3' or Data='6' or Data='7' or Data='8' or Data='9' or Data='10' or Data='11')]
     and
-    EventData[Data[@Name='TargetUserName']!='system']
+    EventData[Data[@Name='TargetUserName']!='SYSTEM']
     and
     EventData[Data[@Name='TargetUserName']!='ANONYMOUS LOGON']
-    and
-    EventData[Data[@Name='TargetUserName']!='DWM-1']
-    and
-    EventData[Data[@Name='TargetUserName']!='DWM-2']
-    and
-    EventData[Data[@Name='TargetUserName']!='DWM-3']
     and
     EventData[Data[@Name='TargetUserName']!='LOCAL SERVICE']
     and
@@ -36,7 +30,7 @@
   </Triggers>
   <Principals>
     <Principal id="Author">
-      <UserId>jacauc</UserId>
+      <UserId>S-1-5-21-3911950312-3420160509-134503256-1001</UserId>
       <LogonType>Password</LogonType>
       <RunLevel>HighestAvailable</RunLevel>
     </Principal>
@@ -56,15 +50,16 @@
     <Enabled>true</Enabled>
     <Hidden>false</Hidden>
     <RunOnlyIfIdle>false</RunOnlyIfIdle>
+    <DisallowStartOnRemoteAppSession>false</DisallowStartOnRemoteAppSession>
+    <UseUnifiedSchedulingEngine>true</UseUnifiedSchedulingEngine>
     <WakeToRun>false</WakeToRun>
-    <ExecutionTimeLimit>PT72H</ExecutionTimeLimit>
+    <ExecutionTimeLimit>PT0S</ExecutionTimeLimit>
     <Priority>7</Priority>
   </Settings>
   <Actions Context="Author">
     <Exec>
       <Command>powershell</Command>
-      <Arguments>c:\users\administrator\LoginAudit.ps1</Arguments>
+      <Arguments>C:\Users\Jacques\LoginAudit.ps1</Arguments>
     </Exec>
   </Actions>
 </Task>
-
