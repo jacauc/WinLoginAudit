@@ -1,15 +1,15 @@
-# @jacauc - 11 December 2017
-# IMPORTANT! Please add your own Telegram Bot chat ID to the end of this script, and remove the >>> and <<< characters before and after the placeholders!
-# Your botID may look like this dummy example: 551850262:AAE-SCP0ttF4LD9HgcVNjvUOkyX5UlGERxw
-# your Group chatID may look like this dummy example: -123456789 (note the minus sign in front)
-
-# Then the URL should look similar to this after editing:
-# curl "https://api.telegram.org/bot551850262:AAE-SCP0ttF4LD9HgcVNjvUOkyX5UlGERxw/sendMessage?chat_id=-123456789&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
+# @jacauc - 09 Jan 2018
+# IMPORTANT! Please add your own Telegram Bot chat ID to the following variables:
  
+$tokenID = "123456789:ABC-DEFghIJkLMNOPqrstUvWxYZ"
+$chatID = "-098765432"
+# Note: group ID's typically start with a minus sign
 
 # Query the server for the login events. Attached this powershell script to Windows Scheduler on events 4625, and custom XML event for 4624
-
 # Create a custom event filter for 4624 events to prevent login notification for the scheduled task itself as it authenticates. See the github repo for the XML code
+
+
+
 $colEvents = Get-EventLog -Newest 20 -LogName Security -InstanceId 4624,4625 | Where-Object { $_.TimeGenerated -ge (Get-Date).AddMinutes(-1)}
  
  
@@ -55,8 +55,9 @@ $ip = Test-Connection -ComputerName (hostname) -Count 1  | Select -ExpandPropert
 $ip = $ip.IPAddressToString
 
  
- curl "https://api.telegram.org/bot<<<INSERTTOKENHERE>>>/sendMessage?chat_id=<<<INSERCHATIDHERE>>>&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
+ curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
  
 
+ 
 
 
