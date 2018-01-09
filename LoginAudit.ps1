@@ -45,64 +45,69 @@ $Result = @()
 Foreach ($Entry in $colEvents) 
 { 
 	# Extract Logon Type Number
-		$EvtLogonTypeNum = $Entry.ReplacementStrings[8]
+	$EvtLogonTypeNum = $Entry.ReplacementStrings[8]
+	
 	# If logontype is batch or service, skip this item and move to the next. 
-		If (($EvtLogonTypeNum -eq "4") -or ($EvtLogonTypeNum -eq "5")){continue}
-
-   
+	If (($EvtLogonTypeNum -eq "4") -or ($EvtLogonTypeNum -eq "5")){continue}
+	
 	# Extract "real" username
-		$EvtLogonUser = $Entry.ReplacementStrings[5]
+	$EvtLogonUser = $Entry.ReplacementStrings[5]
+
 	# Extract Internal Username
-		$EvtLogonUser2 = $Entry.ReplacementStrings[1]
+	$EvtLogonUser2 = $Entry.ReplacementStrings[1]
+
 	# If logonuser is - or SYSTEM, skip this item and move to the next. 
-		If (($EvtLogonUser2 -eq "-") -or ($EvtLogonUser2 -eq "SYSTEM")) {continue}	  
+	If (($EvtLogonUser2 -eq "-") -or ($EvtLogonUser2 -eq "SYSTEM")) {continue}	  
 	  
 	# Extract "real" domain	
-		$EvtLogonDomain = $Entry.ReplacementStrings[2]
+	$EvtLogonDomain = $Entry.ReplacementStrings[2]
+	
 	# Extract internal domain	
-		$EvtLogonDomain2 = $Entry.ReplacementStrings[6]
+	$EvtLogonDomain2 = $Entry.ReplacementStrings[6]
+	
 	# If logondomain is "Window Manager" or "Font Driver Host", skip this item and move to the next. 
-		If (($EvtLogonDomain2 -eq "Window Manager") -or ($EvtLogonDomain2 -eq "Font Driver Host")) {continue}
+	If (($EvtLogonDomain2 -eq "Window Manager") -or ($EvtLogonDomain2 -eq "Font Driver Host")) {continue}
   
 	#extract Event ID number
-		$EvtID = $Entry.InstanceId 
+	$EvtID = $Entry.InstanceId 
    
 	#Convert logontype number to string
-		$EvtLogonTypeDesc = $LogonType[$EvtLogonTypeNum] 
+	$EvtLogonTypeDesc = $LogonType[$EvtLogonTypeNum] 
 	  	 
 	#extract time event was generated and convert to standard format
-		$TimeGenerated = $Entry.TimeGenerated.ToString("dd-MMM-yyyy HH:mm:ss")
+	$TimeGenerated = $Entry.TimeGenerated.ToString("dd-MMM-yyyy HH:mm:ss")
    
 	# Filter out some of the 4624 (success) events and logon type = 2 (Interactive)
-		If ($EvtID -eq "4624") 
-		{ 
-			#Check if this event should be ignored
-				If ($ReportingEnabled[$EvtLogonTypeNum] -ne "NO")
-				{
-					$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Success ($EvtLogonTypeDesc)`n")
-				}
-				If ($ReportingEnabled[$EvtLogonTypeNum] -eq "NO")
-				{
-					$Result += @("FILTERED")
-				}
-		} 
+	If ($EvtID -eq "4624") 
+	{ 
+		#Check if this event should be ignored
+		If ($ReportingEnabled[$EvtLogonTypeNum] -ne "NO")
+		{
+			$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Success ($EvtLogonTypeDesc)`n")
+		}
+	} 
    
 	# Filter out some of the 4625 (failed) events  
-		If ($EvtID -eq "4625") 
-		{ 
-			$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Fail`n")
-		} 
+	If ($EvtID -eq "4625") 
+	{ 
+		$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Fail`n")
+	} 
 }
 
 #if no results were returned, exit immediately and do not send Telegram message
-	if ($result.count -eq 0) { exit }
+if ($result.count -eq 0) { exit }
 
-	$result = $result |Sort-Object -Unique
-	$ip = Test-Connection -ComputerName (hostname) -Count 1  | Select -ExpandProperty IPV4Address
-	$ip = $ip.IPAddressToString
+#Remove duplicate events
+$result = $result |Sort-Object -Unique
+
+# obtain computer IP address
+$ip = Test-Connection -ComputerName (hostname) -Count 1  | Select -ExpandProperty IPV4Address
+
+# convert IP address to string
+$ip = $ip.IPAddressToString
 
 #output the results to Telegram using an HTTP GET request
-	curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
+curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
  
 
  
