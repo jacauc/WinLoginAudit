@@ -1,13 +1,40 @@
-# @jacauc - 09 Jan 2018
-# IMPORTANT! Please add your own Telegram Bot chat ID to the following variables:
+# WinLoginAudit
+# @jacauc - 09 Jan 2018 
+# IMPORTANT! Please add your own Telegram Bot chat ID to the following variables.
  
 $tokenID = "123456789:ABC-DEFghIJkLMNOPqrstUvWxYZ"
 $chatID = "-098765432"
 # Note: group ID's typically start with a minus sign
 
+# Logon Types
+$LogonType = $(1 .. 12)
+$LogonType[0] = "ERROR"
+$LogonType[1] = "ERROR"
+$LogonType[2] = "Interactive"
+$LogonType[3] = "Network"
+$LogonType[4] = "Batch" 
+$LogonType[5] = "Service" 
+$LogonType[7] = "Unlock"
+$LogonType[8] = "NetworkCleartext"
+$LogonType[9] = "NewCredentials"
+$LogonType[10] = "RemoteInteractive"
+$LogonType[11] = "CachedInteractive"
 
 
-# Query the server for the login events. Attached this powershell script to Windows Scheduler on events 4625, and custom XML event for 4624
+$ReportingEnabled = $(1 .. 12)
+$ReportingEnabled[0] = "N/A"
+$ReportingEnabled[1] = "N/A"
+$ReportingEnabled[2] = "YES"
+$ReportingEnabled[3] = "YES"
+$ReportingEnabled[4] = "NO" #(We filter these out to prevent excessive notifications)
+$ReportingEnabled[5] = "NO" #(We filter these out to prevent excessive notifications)
+$ReportingEnabled[7] = "YES"
+$ReportingEnabled[8] = "YES"
+$ReportingEnabled[9] = "YES"
+$ReportingEnabled[10] = "YES"
+$ReportingEnabled[11] = "YES"
+
+# Query the server for the login events. Attach this powershell script to Windows Scheduler on events 4625, and custom XML event for 4624
 # Create a custom event filter for 4624 events to prevent login notification for the scheduled task itself as it authenticates. See the github repo for the XML code
 
 $colEvents = Get-EventLog -Newest 20 -LogName Security -InstanceId 4624,4625 | Where-Object { $_.TimeGenerated -ge (Get-Date).AddMinutes(-1)}
@@ -17,58 +44,65 @@ $colEvents = Get-EventLog -Newest 20 -LogName Security -InstanceId 4624,4625 | W
 $Result = @()
 Foreach ($Entry in $colEvents) 
 { 
-  # Filter out some of the 4624 (success) events and logon type = 2 (Interactive)
-  If  (($Entry.ReplacementStrings[8]-eq "2") -and ($Entry.ReplacementStrings[5]-ne "-") -and ($Entry.ReplacementStrings[6]-ne "Window Manager") -and ($Entry.ReplacementStrings[6]-ne "Font Driver Host")) 
-  { 
-    $TimeGenerated = $Entry.TimeGenerated.ToString("MMM-dd h:mm:ss")
-    $Domain = $Entry.ReplacementStrings[2]
-    $Username = $Entry.ReplacementStrings[5]
-    $Result += @("`n*Time*: $TimeGenerated `n*User*: $Domain\$Username `n*Result*: Success`n")
-    #$Result 
-    
-  } 
-  # Filter out some of the 4624 (success) events and logon type = 10 (RDP)
-  If  (($Entry.ReplacementStrings[8]-eq "10") -and ($Entry.ReplacementStrings[5]-ne "-"))  
-  { 
-    $TimeGenerated = $Entry.TimeGenerated.ToString("MMM-dd h:mm:ss")
-    $Domain = $Entry.ReplacementStrings[2]
-    $Username = $Entry.ReplacementStrings[5]
-    $Result += @("`n*Time*: $TimeGenerated `n*User*: $Domain\$Username `n*Result*: Success (RDP)`n")
-    #$Result 
-    
-  } 
-  # Filter out some of the 4624 (success) events and logon type = 3 (Network)
-   If  (($Entry.ReplacementStrings[8]-eq "3") -and ($Entry.ReplacementStrings[5]-ne "-"))  
-  { 
-    $TimeGenerated = $Entry.TimeGenerated.ToString("MMM-dd h:mm:ss")
-    $Domain = $Entry.ReplacementStrings[2]
-    $Username = $Entry.ReplacementStrings[5]
-    $Result += @("`n*Time*: $TimeGenerated `n*User*: $Domain\$Username `n*Result*: Success (Network)`n")
-    #$Result 
-    
-  } 
-  # Filter out some of the 4625 (failed) events  
-  If (($Entry.InstanceId -eq "4625") -and ($Entry.ReplacementStrings[5]-ne "-")) 
-  { 
-    $TimeGenerated = $Entry.TimeGenerated.ToString("MMM-dd h:mm:ss")
-    $Domain = $Entry.ReplacementStrings[2]
-    $Username = $Entry.ReplacementStrings[5]
-    $Result += @("`n*Time*: $TimeGenerated `n*User*: $Domain\$Username `n*Result*: Fail`n")
-    #$Result 
-  } 
+	# Extract Logon Type Number
+		$EvtLogonTypeNum = $Entry.ReplacementStrings[8]
+	# If logontype is batch or service, skip this item and move to the next. 
+		If (($EvtLogonTypeNum -eq "4") -or ($EvtLogonTypeNum -eq "5")){continue}
+
+   
+	# Extract "real" username
+		$EvtLogonUser = $Entry.ReplacementStrings[5]
+	# Extract Internal Username
+		$EvtLogonUser2 = $Entry.ReplacementStrings[1]
+	# If logonuser is - or SYSTEM, skip this item and move to the next. 
+		If (($EvtLogonUser2 -eq "-") -or ($EvtLogonUser2 -eq "SYSTEM")) {continue}	  
+	  
+	# Extract "real" domain	
+		$EvtLogonDomain = $Entry.ReplacementStrings[2]
+	# Extract internal domain	
+		$EvtLogonDomain2 = $Entry.ReplacementStrings[6]
+	# If logondomain is "Window Manager" or "Font Driver Host", skip this item and move to the next. 
+		If (($EvtLogonDomain2 -eq "Window Manager") -or ($EvtLogonDomain2 -eq "Font Driver Host")) {continue}
+  
+	#extract Event ID number
+		$EvtID = $Entry.InstanceId 
+   
+	#Convert logontype number to string
+		$EvtLogonTypeDesc = $LogonType[$EvtLogonTypeNum] 
+	  	 
+	#extract time event was generated and convert to standard format
+		$TimeGenerated = $Entry.TimeGenerated.ToString("dd-MMM-yyyy HH:mm:ss")
+   
+	# Filter out some of the 4624 (success) events and logon type = 2 (Interactive)
+		If ($EvtID -eq "4624") 
+		{ 
+			#Check if this event should be ignored
+				If ($ReportingEnabled[$EvtLogonTypeNum] -ne "NO")
+				{
+					$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Success ($EvtLogonTypeDesc)`n")
+				}
+				If ($ReportingEnabled[$EvtLogonTypeNum] -eq "NO")
+				{
+					$Result += @("FILTERED")
+				}
+		} 
+   
+	# Filter out some of the 4625 (failed) events  
+		If ($EvtID -eq "4625") 
+		{ 
+			$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Fail`n")
+		} 
 }
 
 #if no results were returned, exit immediately and do not send Telegram message
-if ($result.count -eq 0) { exit }
+	if ($result.count -eq 0) { exit }
 
- $result = $result |Sort-Object -Unique
- #$result
-#$FailedLogin= $eventsDC."UserName"
-$ip = Test-Connection -ComputerName (hostname) -Count 1  | Select -ExpandProperty IPV4Address
-$ip = $ip.IPAddressToString
+	$result = $result |Sort-Object -Unique
+	$ip = Test-Connection -ComputerName (hostname) -Count 1  | Select -ExpandProperty IPV4Address
+	$ip = $ip.IPAddressToString
 
- 
-curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
+#output the results to Telegram using an HTTP GET request
+	curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
  
 
  
