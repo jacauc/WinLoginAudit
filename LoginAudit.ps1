@@ -6,6 +6,7 @@ $tokenID = "123456789:ABC-DEFghIJkLMNOPqrstUvWxYZ"
 $chatID = "-098765432"
 # Note: group ID's typically start with a minus sign
 
+
 # Logon Types
 $LogonType = $(1 .. 12)
 $LogonType[0] = "ERROR"
@@ -25,7 +26,7 @@ $ReportingEnabled = $(1 .. 12)
 $ReportingEnabled[0] = "N/A"
 $ReportingEnabled[1] = "N/A"
 $ReportingEnabled[2] = "YES"
-$ReportingEnabled[3] = "NO" #(We filter these out to prevent excessive notifications)
+$ReportingEnabled[3] = "YES"
 $ReportingEnabled[4] = "NO" #(We filter these out to prevent excessive notifications)
 $ReportingEnabled[5] = "NO" #(We filter these out to prevent excessive notifications)
 $ReportingEnabled[7] = "YES"
@@ -57,7 +58,7 @@ Foreach ($Entry in $colEvents)
 	$EvtLogonUser2 = $Entry.ReplacementStrings[1]
 
 	# If logonuser is - or SYSTEM, skip this item and move to the next. 
-	If (($EvtLogonUser2 -eq "-") -or ($EvtLogonUser2 -eq "SYSTEM")) {continue}	  
+	If (($EvtLogonUser -eq "-") -or ($EvtLogonUser2 -eq "-") -or ($EvtLogonUser2 -eq "SYSTEM")) {continue}	  
 	  
 	# Extract "real" domain	
 	$EvtLogonDomain = $Entry.ReplacementStrings[2]
@@ -111,3 +112,5 @@ curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mod
  
 
  
+
+
