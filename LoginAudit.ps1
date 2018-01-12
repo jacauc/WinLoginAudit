@@ -75,8 +75,6 @@ Foreach ($Entry in $colEvents)
 	
 	#extract Event ID number
 	$EvtID = $Entry.Id 
-	
-
    
 	#Convert logontype number to string
 	$EvtLogonTypeDesc = $LogonType[$EvtLogonTypeNum] 
