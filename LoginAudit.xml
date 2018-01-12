@@ -8,29 +8,34 @@
   <Triggers>
     <EventTrigger>
       <Enabled>true</Enabled>
-      <Subscription>&lt;QueryList&gt;&lt;Query Id="0" Path="Security"&gt;&lt;Select Path="Security"&gt;*[System[EventID=4625]]&lt;/Select&gt;&lt;/Query&gt;&lt;/QueryList&gt;</Subscription>
-    </EventTrigger>
-    <EventTrigger>
-      <Enabled>true</Enabled>
       <Subscription>&lt;QueryList&gt;&lt;Query Id="0" Path="Security"&gt;&lt;Select Path="Security"&gt;
-  *[System[EventID=4624]
-    and
-    EventData[Data[@Name='LogonType'] and (Data='2' or Data='6' or Data='7' or Data='8' or Data='9' or Data='10' or Data='11')]
-    and
-    EventData[Data[@Name='TargetUserName']!='SYSTEM']
-    and
-    EventData[Data[@Name='TargetUserName']!='ANONYMOUS LOGON']
-    and
-    EventData[Data[@Name='TargetUserName']!='LOCAL SERVICE']
-    and
-    EventData[Data[@Name='TargetUserName']!='NETWORK SERVICE']
-  ]
+	*[System[EventID=4624]
+	and
+	EventData[Data[@Name='LogonType'] != '4']
+	and 
+	EventData[Data[@Name='LogonType'] != '5']
+	and
+	EventData[Data[@Name='SubjectUserSid']!='S-1-0-0']
+	and
+	EventData[Data[@Name='TargetDomainName']!='Window Manager']
+	and
+	EventData[Data[@Name='TargetDomainName']!='Font Driver Host']
+	and
+	( System[TimeCreated[timediff(@SystemTime) &amp;lt;= 60000]])
+	]
+	
+	or
+	
+	*[System[EventID=4625] 
+	and
+	( System[TimeCreated[timediff(@SystemTime) &amp;lt;= 60000]])
+	]
   &lt;/Select&gt;&lt;/Query&gt;&lt;/QueryList&gt;</Subscription>
     </EventTrigger>
   </Triggers>
   <Principals>
     <Principal id="Author">
-      <UserId>S-1-5-21-3911950312-34546450509-134503256-1001</UserId>
+      <UserId>S-1-5-21-3911950312-3420160509-134503256-1001</UserId>
       <LogonType>Password</LogonType>
       <RunLevel>HighestAvailable</RunLevel>
     </Principal>
