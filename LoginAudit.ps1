@@ -22,81 +22,93 @@ $LogonType[10] = "RemoteInteractive"
 $LogonType[11] = "CachedInteractive"
 
 
-$ReportingEnabled = $(1 .. 12)
-$ReportingEnabled[0] = "N/A"
-$ReportingEnabled[1] = "N/A"
-$ReportingEnabled[2] = "YES"
-$ReportingEnabled[3] = "YES"
-$ReportingEnabled[4] = "NO" #(We filter these out to prevent excessive notifications)
-$ReportingEnabled[5] = "NO" #(We filter these out to prevent excessive notifications)
-$ReportingEnabled[7] = "YES"
-$ReportingEnabled[8] = "YES"
-$ReportingEnabled[9] = "YES"
-$ReportingEnabled[10] = "YES"
-$ReportingEnabled[11] = "YES"
+$filterXml = "
+<QueryList>
+  <Query Id='0' Path='Security'>
+    <Select Path='Security'>
+	*[System[EventID=4624]
+	and
+	EventData[Data[@Name='LogonType'] != '4']
+	and 
+	EventData[Data[@Name='LogonType'] != '5']
+	and
+	EventData[Data[@Name='SubjectUserSid']!='S-1-0-0']
+	and
+	EventData[Data[@Name='TargetDomainName']!='Window Manager']
+	and
+	EventData[Data[@Name='TargetDomainName']!='Font Driver Host']
+	and
+	( System[TimeCreated[timediff(@SystemTime) &lt;= 60000]])
+	]
+	
+	or
+	
+	*[System[EventID=4625] 
+	and
+	( System[TimeCreated[timediff(@SystemTime) &lt;= 60000]])
+	]
+  </Select>
+  </Query>
+</QueryList>"
 
-# Query the server for the login events. Attach this powershell script to Windows Scheduler on events 4625, and custom XML event for 4624
+
+# Query the server for the login events. Attach this powershell script to Windows Scheduler on events  with custom XML event for 4624 and 4625 
 # Create a custom event filter for 4624 events to prevent login notification for the scheduled task itself as it authenticates. See the github repo for the XML code
 
-$colEvents = Get-EventLog -Newest 20 -LogName Security -InstanceId 4624,4625 | Where-Object { $_.TimeGenerated -ge (Get-Date).AddMinutes(-1)}
- 
- 
+$colEvents = Get-WinEvent -FilterXml $filterXml 
+
 # Iterate through the collection of login events. 
 $Result = @()
 Foreach ($Entry in $colEvents) 
 { 
-	# Extract Logon Type Number
-	$EvtLogonTypeNum = $Entry.ReplacementStrings[8]
+    $EvtSourceIP = ""
+	$SourceIPPresent = ""
 	
-	# If logontype is batch or service, skip this item and move to the next. 
-	If (($EvtLogonTypeNum -eq "4") -or ($EvtLogonTypeNum -eq "5")){continue}
+	# Extract Logon Type Number
+	$EvtLogonTypeNum = $Entry.Properties[8].Value
 	
 	# Extract "real" username
-	$EvtLogonUser = $Entry.ReplacementStrings[5]
+	$EvtLogonUser = $Entry.Properties[5].Value
 
-	# Extract Internal Username
-	$EvtLogonUser2 = $Entry.ReplacementStrings[1]
-
-	# If logonuser is - or SYSTEM, skip this item and move to the next. 
-	If (($EvtLogonUser -eq "-") -or ($EvtLogonUser2 -eq "-") -or ($EvtLogonUser2 -eq "SYSTEM")) {continue}	  
-	  
 	# Extract "real" domain	
-	$EvtLogonDomain = $Entry.ReplacementStrings[2]
+	$EvtLogonDomain = $Entry.Properties[2].Value
 	
-	# Extract internal domain	
-	$EvtLogonDomain2 = $Entry.ReplacementStrings[6]
-	
-	# If logondomain is "Window Manager" or "Font Driver Host", skip this item and move to the next. 
-	If (($EvtLogonDomain2 -eq "Window Manager") -or ($EvtLogonDomain2 -eq "Font Driver Host")) {continue}
-  
 	#extract Event ID number
-	$EvtID = $Entry.InstanceId 
+	$EvtID = $Entry.Id 
+	
+
    
 	#Convert logontype number to string
 	$EvtLogonTypeDesc = $LogonType[$EvtLogonTypeNum] 
 	  	 
 	#extract time event was generated and convert to standard format
-	$TimeGenerated = $Entry.TimeGenerated.ToString("dd-MMM-yyyy HH:mm:ss")
+	$TimeGenerated = $Entry.TimeCreated.ToString("dd-MMM-yyyy HH:mm:ss")
    
-	# Filter out some of the 4624 (success) events and logon type = 2 (Interactive)
+	# Filter out some of the 4624 (success) events 
 	If ($EvtID -eq "4624") 
 	{ 
-		#Check if this event should be ignored
-		If ($ReportingEnabled[$EvtLogonTypeNum] -ne "NO")
-		{
-			$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Success ($EvtLogonTypeDesc)`n")
+		$EvtSourceIP = $Entry.Properties[18].Value	
+		If (($EvtSourceIP -ne "") -and ($EvtSourceIP -ne "-") -and ($EvtSourceIP -ne "::1")) 
+			{
+				$SourceIPPresent = "*Source IP*: $EvtSourceIP`n"
 		}
+		$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Success ($EvtLogonTypeDesc)`n$SourceIPPresent")
 	} 
    
 	# Filter out some of the 4625 (failed) events  
 	If ($EvtID -eq "4625") 
 	{ 
-		$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Fail`n")
+		$EvtSourceIP = $Entry.Properties[19].Value
+		If (($EvtSourceIP -ne "") -and ($EvtSourceIP -ne "-") -and ($EvtSourceIP -ne "::1")) 
+			{
+				$SourceIPPresent = "*Source IP*: $EvtSourceIP`n"
+			}
+		$Result += @("`n*Time*: $TimeGenerated `n*User*: $EvtLogonDomain\$EvtLogonUser `n*Result*: Fail`n$SourceIPPresent")
 	} 
 }
 
 #if no results were returned, exit immediately and do not send Telegram message
-if ($result.count -eq 0) { exit }
+#if ($result.count -eq 0) { exit }
 
 #Remove duplicate events
 $result = $result |Sort-Object -Unique
@@ -112,5 +124,4 @@ curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mod
  
 
  
-
 
