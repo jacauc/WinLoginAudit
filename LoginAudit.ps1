@@ -53,7 +53,7 @@ $filterXml = "
 
 
 # Query the server for the login events. Attach this powershell script to Windows Scheduler on events  with custom XML event for 4624 and 4625 
-# Create a custom event filter for 4624 events to prevent login notification for the scheduled task itself as it authenticates. See the github repo for the XML code
+# Create a custom event filter for 4624 events to prevent login notification for the scheduled task itself as it authenticates. See the github repo for the scheduled task to import
 
 $colEvents = Get-WinEvent -FilterXml $filterXml 
 
