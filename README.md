@@ -81,18 +81,27 @@ NOTE: The scheduled task is created to filter out 4624 events as follows, since 
 <QueryList>
   <Query Id="0" Path="Security">
     <Select Path="Security">
-  *[System[EventID=4624]
-    and
-    EventData[Data[@Name='LogonType'] and (Data='2' or Data='3' or Data='6' or Data='7' or Data='8' or Data='9' or Data='10' or Data='11')]
-    and
-    EventData[Data[@Name='TargetUserName']!='SYSTEM']
-    and
-    EventData[Data[@Name='TargetUserName']!='ANONYMOUS LOGON']
-    and
-    EventData[Data[@Name='TargetUserName']!='LOCAL SERVICE']
-    and
-    EventData[Data[@Name='TargetUserName']!='NETWORK SERVICE']
-  ]
+	*[System[EventID=4624]
+	and
+	EventData[Data[@Name='LogonType'] != '4']
+	and 
+	EventData[Data[@Name='LogonType'] != '5']
+	and
+	EventData[Data[@Name='SubjectUserSid']!='S-1-0-0']
+	and
+	EventData[Data[@Name='TargetDomainName']!='Window Manager']
+	and
+	EventData[Data[@Name='TargetDomainName']!='Font Driver Host']
+	and
+	( System[TimeCreated[timediff(@SystemTime) &lt;= 60000]])
+	]
+	
+	or
+	
+	*[System[EventID=4625] 
+	and
+	( System[TimeCreated[timediff(@SystemTime) &lt;= 60000]])
+	]
   </Select>
   </Query>
 </QueryList>
