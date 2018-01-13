@@ -51,7 +51,7 @@ https://api.telegram.org/bot<<<TOKEN>>>/getUpdates
 
 # Enable Powershell Scripts
 1. Open PowerShell as an Administrator on the windows machine
-2. Type
+2. Type:
 ```
 set-executionpolicy remotesigned
 ```
