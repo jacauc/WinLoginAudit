@@ -28,6 +28,10 @@
 	
 	*[System[EventID=4625] 
 	and
+	EventData[Data[@Name='LogonType'] != '4']
+	and 
+	EventData[Data[@Name='LogonType'] != '5']
+	and
 	( System[TimeCreated[timediff(@SystemTime) &amp;lt;= 60000]])
 	]
   &lt;/Select&gt;&lt;/Query&gt;&lt;/QueryList&gt;</Subscription>
