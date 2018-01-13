@@ -100,6 +100,10 @@ NOTE: The scheduled task is created to filter out 4624 events as follows, since 
 	
 	*[System[EventID=4625] 
 	and
+	EventData[Data[@Name='LogonType'] != '4']
+	and 
+	EventData[Data[@Name='LogonType'] != '5']
+	and
 	( System[TimeCreated[timediff(@SystemTime) &lt;= 60000]])
 	]
   </Select>
