@@ -79,7 +79,7 @@ Run secpol.msc on the machine and navigate to Security Settings > Local Policies
 6. On the "General" tab, click on "Change User or Group" and select a local administrative user.
 7. Click OK and type the correct password for aforementioned user.
 
-NOTE: The scheduled task is created to filter out 4624 and 4625 events as follows, since a successful execution of the scheduled task itself, will generate an event in the log, thus, without the filter, the task will enter into and endless loop.
+NOTE: The scheduled task is created to filter out 4624 and 4625 events as follows, since a successful execution of the scheduled task itself, will generate an event in the log, thus without the filter, the task will enter into and endless loop.
 ```
 <QueryList>
   <Query Id="0" Path="Security">
