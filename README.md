@@ -123,3 +123,5 @@ runas /user:test cmd
 3. You should now get an instant telegram message indicating the failed login attempt
 
 ![2018-01-06_16-40-22](https://user-images.githubusercontent.com/18201320/34640711-63ec9b32-f300-11e7-8b8c-c1ce1a447d49.png)
+
+[![Donate Bitcoin](https://img.shields.io/badge/donate-bitcoin-orange.svg)](https://jacauc.github.io/donate-bitcoin/)
