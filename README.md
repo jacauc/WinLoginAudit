@@ -124,4 +124,4 @@ runas /user:test cmd
 
 ![2018-01-06_16-40-22](https://user-images.githubusercontent.com/18201320/34640711-63ec9b32-f300-11e7-8b8c-c1ce1a447d49.png)
 
-[![Donate Bitcoin](https://img.shields.io/badge/donate-bitcoin-orange.svg)](https://jacauc.github.io/donate-bitcoin/)
+[![Donate Bitcoin](https://user-images.githubusercontent.com/18201320/42027759-bdec89d8-7aca-11e8-91b4-f36648eb0ae7.png)](https://jacauc.github.io/donate-bitcoin/)
