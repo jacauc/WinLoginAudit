@@ -1,6 +1,6 @@
 # Receive instant SUCCESSFUL or FAILED windows login attempt notifications on your Telegram chat app (Android/IOS/Windows/MAC) 
 
-[![Donate Bitcoin](https://raw.githubusercontent.com/jacauc/jacauc.github.io/master/donate-bitcoin-orange.svg)](https://jacauc.github.io/donate-bitcoin/)
+[![Donate Bitcoin](https://user-images.githubusercontent.com/18201320/42027759-bdec89d8-7aca-11e8-91b4-f36648eb0ae7.png)](https://jacauc.github.io/donate-bitcoin/)
 
 
 This is a windows scheduled task to run a powershell script whenever a successful (Event ID 4624) or failed (Event ID 4625) login event is detected in the windows event log.
