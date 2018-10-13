@@ -33,21 +33,22 @@ Simplified instructions:
 
 6. RECORD THE TOKEN SHOWN IN THE MESSAGE
 7. Start a chat with your bot and type /start
-8. Exit aforementioned chat and create a Telegram Group conversation. Call it something like "System Notifications"
-9. Invite your bot to the group.
-10. Access the following page (insert your bot's TOKEN and remove the <<< and >>> characters): 
+8. Type a test message for the bot like "hello"
+9. Exit aforementioned chat and create a Telegram Group conversation. Call it something like "System Notifications"
+10. Invite your bot to the group.
+11. Access the following page (insert your bot's TOKEN and remove the <<< and >>> characters): 
 ```
 https://api.telegram.org/bot<<<TOKEN>>>/getUpdates
 ```
-11. Look for the group's ID as shown in green below. The group ID will normally be preceded by a minus sign. RECORD THE GROUPID:
+12. Look for the group's ID as shown in green below. The group ID will normally be preceded by a minus sign. RECORD THE GROUPID:
 
 ![2018-01-06_16-06-23](https://user-images.githubusercontent.com/18201320/34640491-4faaa5f0-f2fc-11e7-853e-72cc5b1df323.png)
 
-12. Do a test - You should now get a hello world message in the telegram group from your bot. If this didn't work, check steps 1-11 again. 
+13. Do a test - You should now get a hello world message in the telegram group from your bot. If this didn't work, check steps 1-11 again. 
   ```
   https://api.telegram.org/bot<<<TOKEN>>>/sendMessage?chat_id=<<<-GROUPID>>>&text=Hello+World
   ```
-13. Keep your GROUPID and TOKEN and replace the values accordingly in the .ps1 powershell script file.
+14. Keep your GROUPID and TOKEN and replace the values accordingly in the .ps1 powershell script file.
 
 # Enable Powershell Scripts
 1. Open PowerShell as an Administrator on the windows machine
