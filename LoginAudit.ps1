@@ -3,7 +3,7 @@
 # IMPORTANT! Please add your own Telegram Bot chat ID to the following variables.
  
 $tokenID = "123456789:ABC-DEFghIJkLMNOPqrstUvWxYZ"
-$chatID = "-098765432"
+$chatsID = "-098765432"
 # Note: group ID's typically start with a minus sign
 
 
@@ -122,8 +122,6 @@ $ip = Test-Connection -ComputerName (hostname) -Count 1  | Select -ExpandPropert
 $ip = $ip.IPAddressToString
 
 #output the results to Telegram using an HTTP GET request
-curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
- 
-
- 
-
+foreach( $chatID in $chatsID) {
+	curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
+}
