@@ -3,7 +3,7 @@
 # IMPORTANT! Please add your own Telegram Bot chat ID to the following variables.
  
 $tokenID = "123456789:ABC-DEFghIJkLMNOPqrstUvWxYZ"
-$chatsID = "-098765432"
+$chatsID = "-098765432", "-123456789"
 # Note: group ID's typically start with a minus sign
 
 
