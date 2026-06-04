@@ -6,6 +6,9 @@ $tokenID = "123456789:ABC-DEFghIJkLMNOPqrstUvWxYZ"
 $chatsID = "-098765432", "-123456789"
 # Note: group ID's typically start with a minus sign
 
+$proxyUrl = ""
+# If you're need a proxy for connecting to Telegram, write down proxy url (http://example.com:8123 for example)
+# otherwise just leave variable empty
 
 # Logon Types
 $LogonType = $(1 .. 12)
@@ -123,5 +126,12 @@ $ip = $ip.IPAddressToString
 
 #output the results to Telegram using an HTTP GET request
 foreach( $chatID in $chatsID) {
-	curl "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
+	$message = "https://api.telegram.org/bot$tokenID/sendMessage?chat_id=$chatID&parse_mode=Markdown&text=*System Login Activity* %0A*$env:COMPUTERNAME* : $ip $result"
+
+	if ($proxyUrl.Length -gt 0) {
+		curl -Proxy $proxyUrl $message
+	}
+	else {
+		curl $message
+	}
 }
